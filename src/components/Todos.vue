@@ -16,6 +16,11 @@
 		</li>
 	  </ul>
 	</section>
+    <footer class="footer" v-show="todos.length">
+      <span class="todo-count">
+        <strong v-text="remaining"></strong> {{ pluralize('item', remaining) }} left
+      </span>
+    </footer>
   </section>
 </template>
 
@@ -29,7 +34,15 @@ export default {
       editedTodo: null
     }
   },
+  computed: {
+    remaining () {
+      return this.todos.filter(t => !t.completed).length
+    }
+  },
   methods: {
+    pluralize (word, count) {
+      return word + (count === 1 ? '' : 's')
+    },
     addTodo () {
       let value = this.newTodo && this.newTodo.trim()
       if (!value) {
