@@ -10,6 +10,7 @@
 		  <div class="view">
 			<input class="toggle" type="checkbox" v-model="todo.completed">
 			<label @dblclick="editTodo(todo)">{{ todo.title }}</label>
+            <button class="destroy" @click="removeTodo(todo)"></button>
 		  </div>
 		  <input class="edit" type="text" v-model="todo.title" v-todo-focus="todo == editedTodo" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" v-on:keyup.27="cancelEdit(todo)">
 		</li>
@@ -49,6 +50,10 @@ export default {
     cancelEdit (todo) {
       this.editedTodo = null
       todo.title = this.beforeEditCache
+    },
+    removeTodo (todo) {
+      let index = this.todos.indexOf(todo)
+      this.todos.splice(index, 1)
     }
   },
   directives: {
