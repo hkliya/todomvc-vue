@@ -1,5 +1,6 @@
 <template>
   <div class="todos">
+    <input type="text" autofocus placeholder="What needs to be done?" v-model="newTodo" @keyup.enter="addTodo">
     <ul>
       <li v-for="todo in todos">
         <div class="view">
@@ -16,16 +17,18 @@ export default {
   name: 'todos',
   data () {
     return {
-      todos: [
-        {
-          title: 'buy milk',
-          completed: false
-        },
-        {
-          title: 'buy salt',
-          completed: true
-        }
-      ]
+      newTodo: '',
+      todos: []
+    }
+  },
+  methods: {
+    addTodo () {
+      let value = this.newTodo && this.newTodo.trim()
+      if (!value) {
+        return
+      }
+      this.todos.push({title: value, completed: false})
+      this.newTodo = ''
     }
   }
 }
