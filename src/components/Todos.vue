@@ -6,7 +6,7 @@
 	</header>
 	<section class="main" v-show="todos.length">
 	  <ul class="todo-list">
-		<li class="todo" v-for="todo in todos" :class="{completed: todo.completed, editing: todo == editedTodo}">
+		<li class="todo" v-for="todo in filteredTodos" :class="{completed: todo.completed, editing: todo == editedTodo}">
 		  <div class="view">
 			<input class="toggle" type="checkbox" v-model="todo.completed">
 			<label @dblclick="editTodo(todo)">{{ todo.title }}</label>
@@ -20,23 +20,52 @@
       <span class="todo-count">
         <strong v-text="remaining"></strong> {{ pluralize('item', remaining) }} left
       </span>
+      <ul class="filters">
+        <li><a href="#/all" :class="{selected: visibility == 'all'}">All</a></li>
+        <li><a href="#/active" :class="{selected: visibility == 'active'}">Active</a></li>
+        <li><a href="#/completed" :class="{selected: visibility == 'completed'}">Completed</a></li>
+      </ul>
     </footer>
   </section>
 </template>
 
 <script>
+import store from '../store'
+
+let filter = {
+  all (todos) {
+    return todos
+  },
+  active (todos) {
+    return todos.filter(t => !t.completed)
+  },
+  completed (todos) {
+    return todos.filter(t => t.completed)
+  }
+}
+
 export default {
   name: 'todos',
   data () {
     return {
+      todos: store.fetch(),
       newTodo: '',
-      todos: [],
-      editedTodo: null
+      editedTodo: null,
+      visibility: 'all'
+    }
+  },
+  watch: {
+    todos: {
+      deep: true,
+      handler: store.save
     }
   },
   computed: {
     remaining () {
       return this.todos.filter(t => !t.completed).length
+    },
+    filteredTodos () {
+      return filter[this.visibility](this.todos)
     }
   },
   methods: {

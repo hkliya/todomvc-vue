@@ -4,12 +4,23 @@ import Todos from '@/components/Todos'
 
 Vue.use(Router)
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'Todos',
-      component: Todos
+let routes = ['all', 'active', 'completed'].map(visibility => {
+  return {
+    path: `/${visibility}`,
+    component: {
+      extends: Todos,
+      data: () => {
+        return {
+          visibility
+        }
+      }
     }
-  ]
+  }
+})
+
+export default new Router({
+  routes: [...routes, {
+    path: '/',
+    redirect: {path: '/all'}
+  }]
 })
