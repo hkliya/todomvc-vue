@@ -63,7 +63,7 @@ export default {
   },
   computed: {
     remaining () {
-      return this.todos.filter(t => !t.completed).length
+      return filter.active(this.todos).length
     },
     filteredTodos () {
       return filter[this.visibility](this.todos)
